@@ -10,6 +10,8 @@ import {
 
 import Icon from "react-native-vector-icons/FontAwesome";
 
+import asyncStorage from "@react-native-community/async-storage";
+
 import Task from "../../components/Task";
 import AddTask from "../AddTask";
 
@@ -19,16 +21,46 @@ import todayImage from "../../../assets/imgs/today.jpg";
 import commonStyles from "../../commonStyles";
 import styles from "./styles";
 
+const initialState = {
+    tasksDoneVisible: true,
+    modalAddTaskVisible: false,
+    tasks: [],
+}
+
 class TaskList extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            tasksDoneVisible: true,
-            modalAddTaskVisible: false,
-            tasks: [],
+            ...initialState,
         }
+    }
+
+    componentDidMount = async () => {
+        const stringState = await asyncStorage.getItem("stateTasks");
+
+        const state = JSON.parse(stringState) || initialState;
+
+        this.setState({
+            tasks: state.tasks,
+        });
+    }
+
+    updateAsyncStorage = () => {
+        asyncStorage.setItem("stateTasks", JSON.stringify(this.state));
+    }
+
+    removeTask = (id) => {
+        const tasks = this.state.tasks;
+
+        tasks.splice(id, 1);
+
+        this.setState({
+            tasks,
+        });
+
+        this.updateAsyncStorage();
     }
 
     createNewTask = (description, final_date = new Date()) => {
@@ -52,6 +84,8 @@ class TaskList extends React.Component {
         this.setState({
             tasks
         }, this.onPressCancel);
+
+        this.updateAsyncStorage();
     }
 
     renderTesks = (tasksState) => {
@@ -69,6 +103,7 @@ class TaskList extends React.Component {
                     doneDate={tasksState[id].doneDate}
                     done={tasksState[id].done}
                     onPress={() => this.onPressTask(id)}
+                    onSwipe={() => this.removeTask(id)}
                 />
             );
 
@@ -83,7 +118,7 @@ class TaskList extends React.Component {
 
         this.setState({
             modalAddTaskVisible,
-        })
+        });
     }
 
     onPressSave = (description, final_date) => {
@@ -95,7 +130,7 @@ class TaskList extends React.Component {
 
         this.setState({
             modalAddTaskVisible,
-        })
+        });
     }
 
     onPressIconEye = () => {
@@ -112,9 +147,12 @@ class TaskList extends React.Component {
 
         task.done = !task.done;
         task.doneDate = formatDate();
+        
         this.setState({
             tasks,
-        })
+        });
+
+        this.updateAsyncStorage();
     }
 
     render() {

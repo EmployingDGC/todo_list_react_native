@@ -4,6 +4,7 @@ import commonStyles from"../../commonStyles";
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: commonStyles.colors.secundary,
         flexDirection: "row",
         alignItems: "center",
         borderColor: "#AAA",
@@ -57,6 +58,33 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+
+    trash: {
+        flexDirection: "row",
+        backgroundColor: "#CC0A0B",
+        alignItems: "center",
+        borderRadius: 25,
+        marginTop: 15,
+        marginLeft: 10,
+        marginRight: 10,
+    },
+
+    trashRight: {
+        justifyContent: "center",
+        width: 70,
+    },
+
+    trashLeft: {
+        flex: 1,
+        padding: 10,
+    },
+
+    trashText: {
+        fontFamily: commonStyles.fontFamily,
+        color: "#FFF",
+        marginLeft: 20,
+        fontSize: 18,
+    }
 });
 
 export default styles;
