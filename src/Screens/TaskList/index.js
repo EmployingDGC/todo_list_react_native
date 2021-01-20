@@ -94,6 +94,7 @@ class TaskList extends React.Component {
         for (let id = 0; id < tasksState.length; id++) {            
             const task = (
                 <Task
+                    id={id}
                     key={`${id}`}
                     style={{
                         display: !this.state.tasksDoneVisible && tasksState[id].done ? "none" : "flex",

@@ -39,7 +39,7 @@ const Task = (props) => {
 
     return (
         <Swipeable
-            key={`${-1 * Math.random()}`}
+            key={`${new Date()}`}
             renderRightActions={onSwipeRight}
             renderLeftActions={onSwipeLeft}
             onSwipeableLeftOpen={props.onSwipe}
